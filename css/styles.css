@@ -1,0 +1,42 @@
+body {
+    /* Usando múltiples degradados para crear un efecto de repetición alternada */
+    background-image: 
+        linear-gradient(to bottom right, #154b5d, #ccebff),
+        linear-gradient(to top left, #add8e6, #ccebff),
+        linear-gradient(to bottom right, #154b5d, #ccebff),
+        linear-gradient(to top left, #add8e6, #ccebff);
+    /* Haciendo que el fondo ocupe el 100% del ancho y alto de la pantalla */
+    background-size: 100% 200%; /* 200% para que los degradados se repitan */
+}
+
+.bg-gradient {
+    background-image: linear-gradient(to bottom right, #add8e6, #ccebff);
+    background-size: cover;
+}
+
+.card {
+    margin-top: 100px; /* Agrega un margen superior de 50px */
+    padding: 30px; /* Espacio alrededor del contenido */
+}
+
+h1 {
+    font-weight: 800; /* Peso de fuente más grueso */
+    font-family: 'Montserrat', sans-serif; /* Cambio de fuente a Montserrat */
+    margin-bottom: 40px; /* Espacio inferior */
+    color: #007bff; /* Color azul */
+    font-size: 3rem; /* Tamaño de fuente más grande */
+}
+
+h2 {
+    margin-bottom: 10px; /* Espacio inferior */
+    color: #007bff; /* Color azul */
+    font-size: 1.5rem; /* Tamaño de fuente más grande */
+}
+
+.equipo {
+    margin-bottom: 30px; /* Agregar un espacio entre cada formulario */
+}
+
+.primer-formulario{
+    margin-bottom: 20px; /* Agregar un espacio entre cada formulario */
+}
