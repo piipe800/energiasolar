@@ -1,0 +1,17 @@
+{
+    "name": "usta/energia-solar",
+    "description": "Proyecto que calcula energia y cantidad de paneles solares segun necesidad",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Usta\\EnergiaSolar\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Linda"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
