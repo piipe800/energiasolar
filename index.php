@@ -45,7 +45,7 @@ $conn->close();
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body">
-                        <h1 class="text-center display-4">Calculadora de Consumo de Energía</h1>
+                        <h1 class="text-center display-4">Dimensionamiento de sistema de energía fotovoltaica utonomo</h1>
                         <form action="conversor.php" method="post" id="formulario">
                             <div class="row mb-3">
                                 <!-- Primer formulario -->
@@ -67,11 +67,11 @@ $conn->close();
                                 </div>
                                 <!-- Tercer formulario -->
                                 <div class="col">
-                                    <label for="hsp">Horas de sol diarias:</label>
+                                    <label for="hsp">Horas de sol pico:</label>
                                     <input type="text" id="hsp" name="hsp" required readonly class="form-control">
                                 </div>
                                 <div class="col">
-                                    <label for="autonomia">Autonomia:</label>
+                                    <label for="autonomia">Autonomía:</label>
                                     <select id="autonomia" name="autonomia" required class="form-select">
                                         <option value="">Selecciona uno</option>
                                         <option value="3">Diario</option>
@@ -80,7 +80,7 @@ $conn->close();
                                 </div>
                             </div>
                             <!-- Formularios para los equipos -->
-                            <h2>Equipos en el Hogar</h2>
+                            <h2>Equipos (carga) en el Hogar</h2>
                             <div id="equipos">
                                 <!-- Los primeros tres formularios -->
                                 <div class="row mb-3">
@@ -106,11 +106,11 @@ $conn->close();
                                     </div>
                                     <div class="col">
                                         <label for="tiempo_uso">Uso al Día (horas):</label>
-                                        <input type="number" name="tiempo_uso[]" required class="form-control">
+                                        <input type="number" name="tiempo_uso[]" max="24" required class="form-control">
                                     </div>
                                     <div class="col">
-                                    <label for="motor">Tiene motor?:</label>
-                                    <select id="motor" name="motor" required class="form-select">
+                                    <label for="motor">¿Tiene motor?:</label>
+                                    <select id="motor" name="motor[]" required class="form-select">
                                         <option value="">Selecciona uno</option>
                                         <option value="true">Si</option>
                                         <option value="false">No</option>
@@ -119,7 +119,7 @@ $conn->close();
                                 </div>
                             </div>
                             <br>
-                            <button type="button" onclick="agregarEquipo()" class="btn btn-primary">Agregar Equipo</button>
+                            <button type="button" onclick="agregarEquipo()" class="btn btn-primary">Agregar carga</button>
                             <input type="submit" value="Calcular Consumo" class="btn btn-success">
                         </form>
                     </div>
@@ -156,10 +156,10 @@ $conn->close();
             </div>
             <div class="col">
                 <label for="tiempo_uso">Uso al Día (horas):</label>
-                <input type="number" name="tiempo_uso[]" required class="form-control">
+                <input type="number" name="tiempo_uso[]"  max="24" required class="form-control">
             </div>
             <div class="col">
-                <label for="motor">Tiene motor?:</label>
+                <label for="motor">¿Tiene motor?:</label>
                 <select id="motor" name="motor" required class="form-select">
                     <option value="">Selecciona uno</option>
                     <option value="true">Si</option>

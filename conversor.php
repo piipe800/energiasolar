@@ -32,17 +32,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $fs = 1.2;
     } 
-    
-    if($total_potencia < 2000) {
-        $vsis = 12;
-        $vbat = 12;
-    } else if($total_potencia > 2000 && $total_potencia < 4000) {
-        $vsis = 24;
-        $vbat = 24;
-    } else if ($total_potencia > 4000) {
-        $vsis = 48;
-        $vbat = 48;
-    }
 
     for ($i = 0; $i < count($cargas); $i++) {
         $motor = $motors[$i];
@@ -53,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $tiempos = $tiemposs[$i];
 
         
-        $potencia_total = $potencia_u * $tiempos;
+        $potencia_total = $potencia_u * $cantidad;
         $watts_diarios = $tiempos * $potencia_total;
 
         if($tc === "AC") {
@@ -63,8 +52,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         if($motor === "true") {
-            $potencia_u = $potencia_u * 3;
-            $potencia_total_pd = $potencia_u * $tiempos;
+            $potencia_un = $potencia_u * 3;
+            $potencia_total_pd = $potencia_un * $tiempos;
         } else {
             $potencia_total_pd = $potencia_u * $tiempos;
         }
@@ -77,6 +66,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $datos_equipos[] = array('carga' => $carga, 'motor' => $motor, 'tc' => $tc, 'hsp' => $hsp, 
         'cantidad' => $cantidad, 'potencia' => $potencia_u, 'tiempo' => $tiempos, 
         'potencia_total' => $potencia_total, 'watts_diarios' => $watts_diarios);
+    }
+
+    if($total_potencia < 2000) {
+        $vsis = 12;
+        $vbat = 12;
+    } else if($total_potencia > 2000 && $total_potencia < 4000) {
+        $vsis = 24;
+        $vbat = 24;
+    } else if ($total_potencia > 4000) {
+        $vsis = 48;
+        $vbat = 48;
     }
 
 // seleccionar panel
@@ -121,6 +121,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Numero de paneles
     $nt = $edt / $calNt;
+    $hhh = $nt;
     
     // Cantidad de paneles en paralelo
     $np = $nt / $ns;
@@ -173,24 +174,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         "bateria5" => ["Capacidad" => 100, "Voltaje" => 12]
     ];
 
-    asort($baterias);
-
+    //asort($baterias);
+    $batTemp = $baterias;
     $capacidad_total = 0;
     $baterias_seleccionadas = [];
-
+    $brp = 0;
     // Recorrer las baterías
     foreach ($baterias as $nombre_bateria => $datos) {
-        // Sumar la capacidad de la batería actual
-        $capacidad_total += $datos['Capacidad'];
-        
+        $capacidad_g = $datos['Capacidad'];
+        //$capacidad_g = $capacidad_g * 3;
+        $btemp1 = $ah * $autonomia;
+        $btemp2 = $capacidad_g / $pdd;
+        $brp = $btemp1 / $btemp2;
+        $capacidad_total = $brp;
+        $capacidad3 = $capacidad_g * 3;
         // Agregar la batería actual a las seleccionadas
         $baterias_seleccionadas[$nombre_bateria] = $baterias[$nombre_bateria];
 
-        // Si la capacidad total supera $ah o se han seleccionado 3 baterías, detener el bucle
-        if ($capacidad_total >= $ah || count($baterias_seleccionadas) >= 3) {
+        if ($brp < 3 || $capacidad3 > $ah) {
             break;
         }
     }
+    $brp = intval($brp);
     $ultima_bateria_seleccionada = end($baterias_seleccionadas);
     $nombre_ultima_bateria = key($baterias_seleccionadas);
 
@@ -198,9 +203,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $vbat = $baterias[$nombre_ultima_bateria]['Voltaje'];
     ////////
 
-    $btemp1 = $ah * $autonomia;
-    $btemp2 = $capacidad_bateria / $pdd;
-    $brp = $btemp1 / $btemp2;
     $brs = $vsis / $vbat;
 
     // Rgulador
@@ -220,12 +222,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="shortcut icon" href="img/Logo USTA.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="css/styles.css" rel="stylesheet">
+    <script>
+        // Función para igualar la altura de las tarjetas
+        function equalizeCardHeight(containerId) {
+            var cards = document.querySelectorAll('#' + containerId + ' .card');
+            var maxHeight = 0;
+            // Encuentra la altura máxima de todas las tarjetas
+            cards.forEach(function(card) {
+                maxHeight = Math.max(maxHeight, card.offsetHeight);
+            });
+            // Establece la altura máxima para todas las tarjetas
+            cards.forEach(function(card) {
+                card.style.height = maxHeight + 'px';
+            });
+        }
+
+        // Llama a la función para cada contenedor de tarjetas cuando se cargue el DOM
+        document.addEventListener('DOMContentLoaded', function() {
+            equalizeCardHeight('card-container-1');
+        });
+    </script>
 </head>
 <body>
     <div class="container mt-5">
         <div class="card bg-gradient">
             <div class="card-body">
-                <h1 class="text-center display-4 mb-4">Resultado de la Calculadora de Consumo de Energía</h1>
+                <h1 class="text-center display-4 mb-4">Resultados dimensionamiento del sistema de energía fotovoltaica autónomo</h1>
                 <div class="table-responsive">
                     <table class="table table-bordered table-light">
                         <thead>
@@ -267,50 +289,57 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </tbody>
                     </table>
                 </div>
-                <div class="container">
+                <div class="container" id="card-container-1">
                     <div class="row justify-content-center">
-                        <div class="col-md-3">
-                            <div class="card custom-bg" style="background-color: #f1f2f6;">
-                                <h5 class="text-center">Numero de paneles</h5>
-                                <h2 class="text-center"><?php echo $nt; ?></h2>
+                        <div class="col-md-5">
+                            <div class="card custom-bg d-flex" style="background-color: #f1f2f6; flex-direction: column; justify-content: center;">
+                                <h2 class="text-center display-7 mb-7">Panel elegido</h2>
+                                <h5>Potencia: <?php echo $pnom; ?></h5>
+                                <h5>Voltaje: <?php echo $vpanel; ?></h5>
+                                <h5>Voltaje de circuito abierto: <?php echo $voc; ?></h5>
+                                <h5>Corriente de corto circuito: <?php echo $isc; ?></h5>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="card custom-bg" style="background-color: #f1f2f6;">
-                                <h5 class="text-center">Paneles en paralelo</h5>
-                                <h2 class="text-center"><?php echo $np; ?></h2>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card custom-bg" style="background-color: #f1f2f6;">
-                                <h5 class="text-center">Bateria ramas paralelo</h5>
-                                <h2 class="text-center"><?php echo $brp; ?></h2>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card custom-bg" style="background-color: #f1f2f6;">
-                                <h5 class="text-center">Bateria ramas en serie</h5>
-                                <h2 class="text-center"><?php echo $brs; ?></h2>
+                        <div class="col-md-5">
+                            <div class="card custom-bg d-flex" style="background-color: #f1f2f6; flex-direction: column; justify-content: center;">
+                                <h2 class="text-center display-7 mb-7">Batería elegido</h2>
+                                <h5>Capacidad: <?php echo $capacidad_bateria; ?></h5>
+                                <h5>Voltaje: <?php echo $vbat; ?></h5>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="container">
+                <div class="container" id="card-container-1">
                     <div class="row justify-content-center">
-                        <div class="col-md-4">
-                            <div class="card custom-bg" style="background-color: #f1f2f6;">
-                                <h5 class="text-center display-6 mb-6">Regulador</h5>
-                                <div>V <?php echo $vsis; ?></div>
-                                <div>Voc6 <?php echo $voc6; ?></div>
-                                <div>Iccs6 <?php echo $ics6; ?></div>
+                        <div class="col-md-3">
+                            <div class="card custom-bg d-flex" style="background-color: #f1f2f6; flex-direction: column; justify-content: center;">
+                                <h2 class="text-center">Cálculo de paneles</h2>
+                                <h6>Numero de paneles: <?php echo $nt; ?></h6>
+                                <h6>Paneles en paralelo: <?php echo $np; ?></h6>
+                                <h6>Paneles en serie: <?php echo $ns; ?></h6>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="card custom-bg" style="background-color: #f1f2f6;">
-                                <h5 class="text-center display-6 mb-6">Inversor</h5>
-                                <div>Pd <?php echo $pd; ?></div>
-                                <div>Vsis <?php echo $vsis; ?></div>
-                                <div>Vsal 110V</div>
+                        <div class="col-md-3">
+                            <div class="card custom-bg d-flex" style="background-color: #f1f2f6; flex-direction: column; justify-content: center;">
+                                <h2 class="text-center">Cálculo de baterías</h2>
+                                <h6>Bateria ramas paralelo: <?php echo $brp; ?></h6>
+                                <h6>Bateria ramas en serie: <?php echo $brs; ?></h6>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card custom-bg d-flex" style="background-color: #f1f2f6; flex-direction: column; justify-content: center;">
+                                <h2 class="text-center display-7 mb-7">Regulador</h2>
+                                <h6>Voltaje del sistema <?php echo $vsis; ?></h6>
+                                <h6>Voltaje de circuito abierto: <?php echo $voc6; ?></h6>
+                                <h6>Corriente de corto circuito: <?php echo $ics6; ?></h6>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card custom-bg d-flex" style="background-color: #f1f2f6; flex-direction: column; justify-content: center;">
+                                <h2 class="text-center display-7 mb-7">Inversor</h2>
+                                <h6>Potencia maxima del inversor: <?php echo $inv; ?></h6>
+                                <h6>Voltaje del sistema: <?php echo $vsis; ?></h6>
+                                <h6>Voltaje de salida: 110V</h6>
                             </div>
                         </div>
                     </div>
