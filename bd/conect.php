@@ -1,11 +1,12 @@
 <?php
-$servername = "localhost";
-$username = "admin";
-$password = "123456";
-$database = "bd_hsp";
+	$servername = "localhost";
+    $username = "admin";
+    $password = "123456";
+    $database = "bd_hsp";
+    $port = "3306";
 
 // Crear conexión
-$conn = new mysqli($servername, $username, $password, $database);
+$conn = new mysqli($servername, $username, $password, $database, $port);
 
 // Comprobar la conexión
 if ($conn->connect_error) {
@@ -15,7 +16,7 @@ if ($conn->connect_error) {
 }
 
 // Consulta SQL para obtener los departamentos
-$sql = "SELECT departamento FROM bd_hsp";
+$sql = "SELECT departamento FROM hsp";
 $result = $conn->query($sql);
 
 // Verificar si hay resultados y almacenarlos en un array
@@ -27,5 +28,7 @@ if ($result->num_rows > 0) {
 } else {
     echo "0 resultados encontrados";
 }
+
+$conn->close();
 
 ?>
