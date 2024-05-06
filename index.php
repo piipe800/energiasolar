@@ -35,6 +35,8 @@ $conn->close();
     <link rel="icon" href="img/Logo USTA.png" type="image/x-icon">
     <link rel="shortcut icon" href="img/Logo USTA.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
     <link href="css/styles.css" rel="stylesheet">
 </head>
 <body>
@@ -67,6 +69,14 @@ $conn->close();
                                 <div class="col">
                                     <label for="hsp">Horas de sol diarias:</label>
                                     <input type="text" id="hsp" name="hsp" required readonly class="form-control">
+                                </div>
+                                <div class="col">
+                                    <label for="motor">Tiene motor?:</label>
+                                    <select id="motor" name="motor" required class="form-select">
+                                        <option value="">Selecciona uno</option>
+                                        <option value="true">Si</option>
+                                        <option value="false">No</option>
+                                    </select>
                                 </div>
                             </div>
                             <!-- Formularios para los equipos -->
@@ -112,10 +122,10 @@ $conn->close();
 
     <script>
         function agregarEquipo() {
-            var equiposDiv = document.getElementById('equipos');
-            var nuevaFila = document.createElement('div');
-            nuevaFila.classList.add('row', 'mb-3');
-            nuevaFila.innerHTML = `
+        var equiposDiv = document.getElementById('equipos');
+        var nuevaFila = document.createElement('div');
+        nuevaFila.classList.add('row', 'mb-3', 'align-items-end');
+        nuevaFila.innerHTML = `
             <div class="col">
                 <label for="tc">TC:</label>
                 <select id="tc" name="TC[]" required class="form-select">
@@ -140,9 +150,20 @@ $conn->close();
                 <label for="tiempo_uso">Uso al Día (horas):</label>
                 <input type="number" name="tiempo_uso[]" required class="form-control">
             </div>
-            `;
-            equiposDiv.appendChild(nuevaFila);
-        }
+            <div class="col-auto">
+                <button type="button" onclick="eliminarEquipo(this)" class="btn btn-danger w-100">
+                    <i class="fas fa-trash-alt"></i> 
+                </button>
+            </div>
+        `;
+        equiposDiv.appendChild(nuevaFila);
+    }
+
+    function eliminarEquipo(elemento) {
+        var fila = elemento.parentNode.parentNode;
+        fila.parentNode.removeChild(fila);
+    }
+
 
         function cargarMunicipios() {
             var departamento = document.getElementById("departamento").value;
