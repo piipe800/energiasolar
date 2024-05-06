@@ -26,43 +26,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html>
 <head>
     <title>Resultado de la Calculadora</title>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-    </style>
+    <link rel="icon" href="img/Logo USTA.png" type="image/x-icon">
+    <link rel="shortcut icon" href="img/Logo USTA.png" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Resultado de la Calculadora de Consumo de Energía</h1>
-    <table>
-        <tr>
-            <th>Nombre del Equipo</th>
-            <th>Tiempo de Uso al Día (horas)</th>
-            <th>Consumo (watts)</th>
-            <th>Watts Gastados al Día</th>
-            <th>Potencia</th>
-        </tr>
-        <?php foreach ($datos_equipos as $equipo): ?>
-            <tr>
-                <td><?php echo $equipo['nombre']; ?></td>
-                <td><?php echo $equipo['tiempo']; ?></td>
-                <td><?php echo $equipo['consumo']; ?></td>
-                <td><?php echo $equipo['watts_diarios']; ?></td>
-                <td><?php echo $equipo['consumo'] * 0.001; ?></td> <!-- Potencia en kW -->
-            </tr>
-        <?php endforeach; ?>
-        <tr>
-            <th colspan="3">Total</th>
-            <td><?php echo $total_watts; ?></td>
-            <td><?php echo $total_watts * 0.001; ?></td> <!-- Potencia total en kW -->
-        </tr>
-    </table>
+    <div class="container mt-5">
+        <div class="card bg-gradient">
+            <div class="card-body">
+                <h1 class="text-center display-4 mb-4">Resultado de la Calculadora de Consumo de Energía</h1>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-light">
+                        <thead>
+                            <tr>
+                                <th>Nombre del Equipo</th>
+                                <th>Tiempo de Uso al Día (horas)</th>
+                                <th>Consumo (watts)</th>
+                                <th>Watts Gastados al Día</th>
+                                <th>Potencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($datos_equipos as $equipo): ?>
+                                <tr>
+                                    <td><?php echo $equipo['nombre']; ?></td>
+                                    <td><?php echo $equipo['tiempo']; ?></td>
+                                    <td><?php echo $equipo['consumo']; ?></td>
+                                    <td><?php echo $equipo['watts_diarios']; ?></td>
+                                    <td><?php echo $equipo['consumo'] * 0.001; ?></td> <!-- Potencia en kW -->
+                                </tr>
+                            <?php endforeach; ?>
+                            <tr>
+                                <th colspan="3">Total</th>
+                                <td><?php echo $total_watts; ?></td>
+                                <td><?php echo $total_watts * 0.001; ?></td> <!-- Potencia total en kW -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Botón para regresar a index.php -->
+                <div class="text-left mt-4">
+                    <a href="index.php" class="btn btn-primary">Regresar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 </body>
 </html>
 
