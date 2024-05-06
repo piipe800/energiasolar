@@ -49,7 +49,7 @@ $conn->close();
                                 <!-- Primer formulario -->
                                 <div class="col primer-formulario">
                                     <label for="departamento">Departamento:</label>
-                                    <select id="departamento" name="departamento" onchange="cargarMunicipios()" class="form-select">
+                                    <select id="departamento" name="departamento" required onchange="cargarMunicipios()" class="form-select">
                                         <option value="">Selecciona un departamento</option>
                                         <?php foreach ($departamentos as $departamento): ?>
                                             <option value="<?php echo $departamento['departamento']; ?>"><?php echo $departamento['departamento']; ?></option>
@@ -59,14 +59,14 @@ $conn->close();
                                 <!-- Segundo formulario -->
                                 <div class="col">
                                     <label for="municipio">Municipio:</label>
-                                    <select id="municipio" name="municipio" disabled class="form-select">
+                                    <select id="municipio" name="municipio" disabled required class="form-select" onchange="cargarHSP()">
                                         <option value="">Selecciona un municipio</option>
                                     </select>
                                 </div>
                                 <!-- Tercer formulario -->
                                 <div class="col">
                                     <label for="hsp">Horas de sol diarias:</label>
-                                    <input type="text" id="hsp" name="hsp" readonly class="form-control">
+                                    <input type="text" id="hsp" name="hsp" required readonly class="form-control">
                                 </div>
                             </div>
                             <!-- Formularios para los equipos -->
@@ -75,17 +75,28 @@ $conn->close();
                                 <!-- Los primeros tres formularios -->
                                 <div class="row mb-3">
                                     <div class="col">
-                                        
-                                        <label for="nombre_equipo">Nombre del Equipo:</label>
-                                        <input type="text" name="nombre_equipo[]" required class="form-control">
+                                        <label for="tc">TC:</label>
+                                        <select id="tc" name="TC[]" required class="form-select">
+                                        <option value="">Seleccione uno</option>
+                                            <option value="AC">AC</option>
+                                            <option value="DC">DC</option>
+                                        </select>
                                     </div>
                                     <div class="col">
-                                        <label for="tiempo_uso">Tiempo de Uso al Día (horas):</label>
+                                        <label for="carga">Carga:</label>
+                                        <input type="text" name="carga[]" required class="form-control">
+                                    </div>
+                                    <div class="col">
+                                        <label for="cantidad">Cantidad:</label>
+                                        <input type="text" name="cantidad[]" required class="form-control">
+                                    </div>
+                                    <div class="col">
+                                        <label for="potencia_u">Potencia unitaria:</label>
+                                        <input type="text" name="potencia_u[]" required class="form-control">
+                                    </div>
+                                    <div class="col">
+                                        <label for="tiempo_uso">Uso al Día (horas):</label>
                                         <input type="number" name="tiempo_uso[]" required class="form-control">
-                                    </div>
-                                    <div class="col">
-                                        <label for="consumo">Consumo (watts):</label>
-                                        <input type="number" name="consumo[]" required class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -105,18 +116,30 @@ $conn->close();
             var nuevaFila = document.createElement('div');
             nuevaFila.classList.add('row', 'mb-3');
             nuevaFila.innerHTML = `
-                <div class="col">
-                    <label for="nombre_equipo">Nombre del Equipo:</label>
-                    <input type="text" name="nombre_equipo[]" required class="form-control">
-                </div>
-                <div class="col">
-                    <label for="tiempo_uso">Tiempo de Uso al Día (horas):</label>
-                    <input type="number" name="tiempo_uso[]" required class="form-control">
-                </div>
-                <div class="col">
-                    <label for="consumo">Consumo (watts):</label>
-                    <input type="number" name="consumo[]" required class="form-control">
-                </div>
+            <div class="col">
+                <label for="tc">TC:</label>
+                <select id="tc" name="TC[]" required class="form-select">
+                <option value="">Seleccione uno</option>
+                    <option value="AC">AC</option>
+                    <option value="DC">DC</option>
+                </select>
+            </div>
+            <div class="col">
+                <label for="carga">Carga:</label>
+                <input type="text" name="carga[]" required class="form-control">
+            </div>
+            <div class="col">
+                <label for="cantidad">Cantidad:</label>
+                <input type="text" name="cantidad[]" required class="form-control">
+            </div>
+            <div class="col">
+                <label for="potencia_u">Potencia unitaria:</label>
+                <input type="text" name="potencia_u[]" required class="form-control">
+            </div>
+            <div class="col">
+                <label for="tiempo_uso">Uso al Día (horas):</label>
+                <input type="number" name="tiempo_uso[]" required class="form-control">
+            </div>
             `;
             equiposDiv.appendChild(nuevaFila);
         }
@@ -129,13 +152,22 @@ $conn->close();
                 if (this.readyState == 4 && this.status == 200) {
                     var municipios = JSON.parse(this.responseText);
                     var municipioDropdown = document.getElementById("municipio");
-                    municipioDropdown.innerHTML = ""; // Limpiar opciones existentes
-                    municipios.forEach(function(municipio) {
-                        var option = document.createElement("option");
-                        option.text = municipio.municipio;
-                        municipioDropdown.add(option);
-                    });
+                    municipioDropdown.innerHTML = "";
+            
+            // Agregar la opción "Seleccionar" al principio del dropdown
+            var opcionSeleccionar = document.createElement('option');
+            opcionSeleccionar.value = "";
+            opcionSeleccionar.text = "Seleccionar";
+            municipioDropdown.appendChild(opcionSeleccionar);
+            
+            // Iterar sobre los municipios y agregarlos al dropdown
+            municipios.forEach(function(municipio) {
+                var option = document.createElement("option");
+                option.text = municipio.municipio;
+                municipioDropdown.appendChild(option);
+            });
                     municipioDropdown.disabled = false; // Habilitar el dropdown de municipios
+                    
                 }
             };
             
@@ -144,14 +176,22 @@ $conn->close();
 
         function cargarHSP() {
             var municipio = document.getElementById("municipio").value;
-            var xmlhttp = new XMLHttpRequest();
+            var departamento = document.getElementById("departamento").value;
+            if(municipio !== "") {
+                console.log('entro');
+                console.log(municipio);
+                var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET", "obtener_hsp.php?municipio=" + municipio + '&departamento=' + departamento, true);
             xmlhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     document.getElementById("hsp").value = this.responseText;
                 }
             };
-            xmlhttp.open("GET", "obtener_hsp.php?municipio=" + municipio, true);
+            
             xmlhttp.send();
+            } else {
+                document.getElementById("hsp").value = "";
+            }
         }
 
     </script>
