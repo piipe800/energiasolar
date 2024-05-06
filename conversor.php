@@ -1,24 +1,35 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Recoger datos del formulario
-    $nombres = $_POST['nombre_equipo'];
-    $tiempos = $_POST['tiempo_uso'];
-    $consumos = $_POST['consumo'];
+    $hsps = $_POST['hsp'];
+    $motors = $_POST['motor'];
+    $tcs = $_POST['TC'];
+    $cargas = $_POST['carga'];
+    $cantidads = $_POST['cantidad'];
+    $potencia_us = $_POST['potencia_u'];
+    $tiemposs = $_POST['tiempo_uso'];
 
     // Calcular el consumo diario de cada equipo
     $total_watts = 0;
     $datos_equipos = array();
 
-    for ($i = 0; $i < count($nombres); $i++) {
-        $nombre = $nombres[$i];
-        $tiempo = $tiempos[$i];
-        $consumo = $consumos[$i];
+    for ($i = 0; $i < count($cargas); $i++) {
+        $hsp = $hsps[$i];
+        $motor = $motors[$i];
+        $tc = $tcs[$i];
+        $carga = $cargas[$i];
+        $cantidad = $cantidads[$i];
+        $potencia_u = $potencia_us[$i];
+        $tiempos = $tiemposs[$i];
 
-        $watts_diarios = $tiempo * $consumo;
-        $total_watts += $watts_diarios;
+        //$potencia_t += $potencia_u;
+        $potencia_total = $potencia_u * $tiempos;
+        $watts_diarios = $tiempos * $potencia_total;
 
         // Guardar datos del equipo
-        $datos_equipos[] = array('nombre' => $nombre, 'tiempo' => $tiempo, 'consumo' => $consumo, 'watts_diarios' => $watts_diarios);
+        $datos_equipos[] = array('carga' => $carga, 'motor' => $motor, 'tc' => $tc, 'hsp' => $hsp, 
+        'cantidad' => $cantidad, 'potencia' => $potencia_u, 'tiempo' => $tiempos, 
+        'potencia_total' => $potencia_total, 'watts_diarios' => $watts_diarios);
     }
 ?>
 
@@ -40,21 +51,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <table class="table table-bordered table-light">
                         <thead>
                             <tr>
-                                <th>Nombre del Equipo</th>
-                                <th>Tiempo de Uso al Día (horas)</th>
-                                <th>Consumo (watts)</th>
-                                <th>Watts Gastados al Día</th>
-                                <th>Potencia</th>
+                                <th>TC</th>
+                                <th>Carga</th>
+                                <th>Cantidad</th>
+                                <th>Potencia unitaria</th>
+                                <th>Uso al Día (horas)</th>
+                                <th>Potencia total</th>
+                                <th>Energia requerida diaria</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($datos_equipos as $equipo): ?>
                                 <tr>
-                                    <td><?php echo $equipo['nombre']; ?></td>
+                                    <td><?php echo $equipo['tc']; ?></td>
+                                    <td><?php echo $equipo['carga']; ?></td>
+                                    <td><?php echo $equipo['cantidad']; ?></td>
+                                    <td><?php echo $equipo['potencia']; ?></td>
                                     <td><?php echo $equipo['tiempo']; ?></td>
-                                    <td><?php echo $equipo['consumo']; ?></td>
+                                    <td><?php echo $equipo['potencia_total']; ?></td>
                                     <td><?php echo $equipo['watts_diarios']; ?></td>
-                                    <td><?php echo $equipo['consumo'] * 0.001; ?></td> <!-- Potencia en kW -->
                                 </tr>
                             <?php endforeach; ?>
                             <tr>
