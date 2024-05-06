@@ -1,6 +1,6 @@
 {
     "name": "usta/energia-solar",
-    "description": "Proyecto que calcula energia y cantidad de paneles solares segun necesidad",
+    "description": "PROYECTO DE GRADO DIMENSIONAMIENTO DE SISTEMAS FOTOVOLTÁICOS DOMICILIARIOS A TRAVÉS DE UNA APLICACIÓN WEB",
     "type": "project",
     "autoload": {
         "psr-4": {
@@ -9,7 +9,7 @@
     },
     "authors": [
         {
-            "name": "Linda"
+            "name": "Linda Lissett Santana Cardozo"
         }
     ],
     "minimum-stability": "dev",
