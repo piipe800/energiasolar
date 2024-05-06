@@ -71,11 +71,11 @@ $conn->close();
                                     <input type="text" id="hsp" name="hsp" required readonly class="form-control">
                                 </div>
                                 <div class="col">
-                                    <label for="motor">Tiene motor?:</label>
-                                    <select id="motor" name="motor" required class="form-select">
+                                    <label for="autonomia">Autonomia:</label>
+                                    <select id="autonomia" name="autonomia" required class="form-select">
                                         <option value="">Selecciona uno</option>
-                                        <option value="true">Si</option>
-                                        <option value="false">No</option>
+                                        <option value="3">Diario</option>
+                                        <option value="2">Fines de semana</option>
                                     </select>
                                 </div>
                             </div>
@@ -108,6 +108,14 @@ $conn->close();
                                         <label for="tiempo_uso">Uso al Día (horas):</label>
                                         <input type="number" name="tiempo_uso[]" required class="form-control">
                                     </div>
+                                    <div class="col">
+                                    <label for="motor">Tiene motor?:</label>
+                                    <select id="motor" name="motor" required class="form-select">
+                                        <option value="">Selecciona uno</option>
+                                        <option value="true">Si</option>
+                                        <option value="false">No</option>
+                                    </select>
+                                </div>
                                 </div>
                             </div>
                             <br>
@@ -149,6 +157,14 @@ $conn->close();
             <div class="col">
                 <label for="tiempo_uso">Uso al Día (horas):</label>
                 <input type="number" name="tiempo_uso[]" required class="form-control">
+            </div>
+            <div class="col">
+                <label for="motor">Tiene motor?:</label>
+                <select id="motor" name="motor" required class="form-select">
+                    <option value="">Selecciona uno</option>
+                    <option value="true">Si</option>
+                    <option value="false">No</option>
+                </select>
             </div>
             <div class="col-auto">
                 <button type="button" onclick="eliminarEquipo(this)" class="btn btn-danger w-100">

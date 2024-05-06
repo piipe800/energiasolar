@@ -40,3 +40,7 @@ h2 {
 .primer-formulario{
     margin-bottom: 20px; /* Agregar un espacio entre cada formulario */
 }
+
+.custom-bg {
+    background-color: #add8e6;
+}
