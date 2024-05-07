@@ -106,7 +106,7 @@ $conn->close();
                                     </div>
                                     <div class="col">
                                         <label for="tiempo_uso">Uso al Día (horas):</label>
-                                        <input type="number" name="tiempo_uso[]" max="24" required class="form-control">
+                                        <input type="number" step="any" name="tiempo_uso[]" max="24" required class="form-control">
                                     </div>
                                     <div class="col">
                                     <label for="motor">¿Tiene motor?:</label>
@@ -119,8 +119,17 @@ $conn->close();
                                 </div>
                             </div>
                             <br>
-                            <button type="button" onclick="agregarEquipo()" class="btn btn-primary">Agregar carga</button>
-                            <input type="submit" value="Calcular Consumo" class="btn btn-success">
+                            <div class="row">
+                                <div class="col">
+                                    <button type="button" onclick="agregarEquipo()" class="btn btn-primary">Agregar carga</button>
+                                    <input type="submit" value="Calcular Consumo" class="btn btn-success">
+                                </div>
+                                <div class="row align-items-end">
+                                    <div class="col text-right" style="text-align: end;">
+                                        <a href="https://1drv.ms/b/s!Agv1Z7ClqnRS8QTfkI0P-Odskxu4?e=DBBBsL" target="_blank">Manual de uso</a>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -156,7 +165,7 @@ $conn->close();
             </div>
             <div class="col">
                 <label for="tiempo_uso">Uso al Día (horas):</label>
-                <input type="number" name="tiempo_uso[]"  max="24" required class="form-control">
+                <input type="number" step="any" name="tiempo_uso[]"  max="24" required class="form-control">
             </div>
             <div class="col">
                 <label for="motor">¿Tiene motor?:</label>

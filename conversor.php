@@ -53,9 +53,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if($motor === "true") {
             $potencia_un = $potencia_u * 3;
-            $potencia_total_pd = $potencia_un * $tiempos;
+            $potencia_total_pd = $potencia_un * $cantidad;
         } else {
-            $potencia_total_pd = $potencia_u * $tiempos;
+            $potencia_total_pd = $potencia_u * $cantidad;
         }
         $pd += $potencia_total_pd;
 
@@ -68,10 +68,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         'potencia_total' => $potencia_total, 'watts_diarios' => $watts_diarios);
     }
 
-    if($total_potencia < 2000) {
+    if ($total_potencia > 18000) {
+        // Redirigir a la pagina que indica que no es permitido mas de 18mil de potencia
+        header("Location: error.php");
+        exit(); // Asegurarse de que el script se detenga después de la redirección
+    }
+
+    if($total_potencia <= 2000) {
         $vsis = 12;
         $vbat = 12;
-    } else if($total_potencia > 2000 && $total_potencia < 4000) {
+    } else if($total_potencia > 2000 && $total_potencia <= 4000) {
         $vsis = 24;
         $vbat = 24;
     } else if ($total_potencia > 4000) {
@@ -99,18 +105,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($paneles_candidatos)) {
         asort($datosPanel);
         $panel_elegido = key($datosPanel);
-        $vpanel = $panel_elegido['voltaje'];
-        $pnom = $panel_elegido['potencia'];
+        $vpanel = $datosPanel[$panel_elegido]['voltaje'];
+        $pnom = $datosPanel[$panel_elegido]['potencia'];
+        $voc = $datosPanel[$panel_elegido]['Voc'];
+        $isc = $datosPanel[$panel_elegido]['Iscc'];
     } else {
-    // Ordenar los paneles candidatos por potencia de forma descendente
-    asort($paneles_candidatos);
-
-    // Obtener el primer panel (el de mayor potencia)
-    $panel_elegido = key($paneles_candidatos);
-    $vpanel = $datosPanel[$panel_elegido]['voltaje'];
-    $pnom = $datosPanel[$panel_elegido]['potencia'];
-    $voc = $datosPanel[$panel_elegido]['Voc'];
-    $isc = $datosPanel[$panel_elegido]['Iscc'];
+        // Ordenar los paneles candidatos por potencia de forma descendente
+        asort($paneles_candidatos);
+    
+        // Obtener el primer panel (el de mayor potencia)
+        $panel_elegido = key($paneles_candidatos);
+        $vpanel = $datosPanel[$panel_elegido]['voltaje'];
+        $pnom = $datosPanel[$panel_elegido]['potencia'];
+        $voc = $datosPanel[$panel_elegido]['Voc'];
+        $isc = $datosPanel[$panel_elegido]['Iscc'];
     }
 
     
