@@ -98,11 +98,11 @@ $conn->close();
                                     </div>
                                     <div class="col">
                                         <label for="cantidad">Cantidad:</label>
-                                        <input type="text" name="cantidad[]" required class="form-control">
+                                        <input type="number" name="cantidad[]" required class="form-control">
                                     </div>
                                     <div class="col">
                                         <label for="potencia_u">Potencia unitaria:</label>
-                                        <input type="text" name="potencia_u[]" required class="form-control">
+                                        <input type="number"step="any" name="potencia_u[]" required class="form-control">
                                     </div>
                                     <div class="col">
                                         <label for="tiempo_uso">Uso al Día (horas):</label>
@@ -157,11 +157,11 @@ $conn->close();
             </div>
             <div class="col">
                 <label for="cantidad">Cantidad:</label>
-                <input type="text" name="cantidad[]" required class="form-control">
+                <input type="number" name="cantidad[]" required class="form-control">
             </div>
             <div class="col">
                 <label for="potencia_u">Potencia unitaria:</label>
-                <input type="text" name="potencia_u[]" required class="form-control">
+                <input type="number"step="any" name="potencia_u[]" required class="form-control">
             </div>
             <div class="col">
                 <label for="tiempo_uso">Uso al Día (horas):</label>

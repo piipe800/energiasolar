@@ -74,13 +74,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit(); // Asegurarse de que el script se detenga después de la redirección
     }
 
-    if($total_potencia <= 2000) {
+    if($total_watts <= 2000) {
         $vsis = 12;
         $vbat = 12;
-    } else if($total_potencia > 2000 && $total_potencia <= 4000) {
+    } else if($total_watts > 2000 && $total_watts <= 4000) {
         $vsis = 24;
         $vbat = 24;
-    } else if ($total_potencia > 4000) {
+    } else if ($total_watts > 4000) {
         $vsis = 48;
         $vbat = 48;
     }
